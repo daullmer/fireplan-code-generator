@@ -2,6 +2,8 @@
 
 Code generator for FirePlan App access. This is useful to not have to start FirePlan if someone needs a new access code.
 
+> :warning: **Unofficial API**: This uses the API that is internally used by Fireplan. It may change at any time. Use at your own risk!
+
 ## Setup
 Copy `.env.example` to `.env` and change the values inside. You can get the MS SQL Connection string and the utoken from the network traffic while running Fireplan. Proxyman and Wireshark are useful tools for that. The utoken seems to be valid forever
 
