@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 from dotenv import load_dotenv, find_dotenv
 import os
+import argparse
 
 env_file = find_dotenv()
 print("Using dot env file: \033[1m{}\033[0m".format(env_file))
@@ -35,22 +36,28 @@ def generate_code(personal_number):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Fireplan Code Generator")
+    parser.add_argument("-p", "--personalnummer", type=str, help="Die persönliche Nummer für die Code-Generierung")
+    args = parser.parse_args()
+
     print("###########################")
     print("# Fireplan Code Generator #")
     print("###########################")
 
     print("Using registration id: \033[1m{}\033[0m".format(ACTIVATION_ID))
 
-    print("Alle Feuerwehrleute:")
-    get_people()
-    print(ALL_PEOPLE[['PersonalNr', 'DisplayName']].to_string(index=False, header=False))
+    # Wenn eine Personalnummer als Argument übergeben wurde, direkt Code generieren
+    if args.personalnummer:
+        personal_number = args.personalnummer
+        print("Es wird ein neuer Code für \033[1m{}\033[0m generiert....".format(personal_number))
+    else:
+        # Ohne Argument: Lade die Liste und frage nach der Personalnummer
+        print("Alle Feuerwehrleute:")
+        get_people()
+        print(ALL_PEOPLE[['PersonalNr', 'DisplayName']].to_string(index=False, header=False))
+        print("Für welche persönliche Nummer soll ein Code generiert werden?")
+        personal_number = input("Bitte Nummer eingeben: ")
+        print("Es wird ein neuer Code für \033[1m{}\033[0m generiert....".format(person['DisplayName'].values[0]))
 
-    print("Für welche persönliche Nummer soll ein Code generiert werden?")
-    print("Bitte Nummer eingeben: ", end='')
-    personal_number = input()
-
-    person = ALL_PEOPLE[ALL_PEOPLE['PersonalNr'] == personal_number]
-
-    print("Es wird ein neuer Code für \033[1m{}\033[0m generiert....".format(person['DisplayName'].values[0]))
     code = generate_code(personal_number)
     print("Code: \033[1m{}\033[0m".format(code))
